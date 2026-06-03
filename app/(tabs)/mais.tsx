@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { modules } from '../../src/data/modules';
 import { ModuleIcon } from '../../src/components/ModuleIcon';
-import { colors, spacing, radius, font } from '../../src/theme/theme';
+import { colors, spacing, font } from '../../src/theme/theme';
 
 export default function Mais() {
   const insets = useSafeAreaInsets();
@@ -25,7 +25,9 @@ export default function Mais() {
         <View style={styles.list}>
           {modules.map((m) => (
             <Pressable key={m.key} style={styles.row}>
-              <ModuleIcon icon={m.icon} color={m.color} size={38} />
+              <View style={styles.rowIconWrap}>
+                <ModuleIcon icon={m.icon} size={22} />
+              </View>
               <Text style={styles.rowLabel}>{m.label}</Text>
               <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
             </Pressable>
@@ -44,17 +46,16 @@ export default function Mais() {
 const styles = StyleSheet.create({
   title: { color: colors.text, fontSize: font.sizes.xxl, fontWeight: '800', paddingHorizontal: spacing.lg },
   subtitle: { color: colors.textMuted, fontSize: font.sizes.md, paddingHorizontal: spacing.lg, marginTop: 2 },
-  list: { marginTop: spacing.xl, paddingHorizontal: spacing.lg, gap: spacing.sm },
+  list: { marginTop: spacing.xl, paddingHorizontal: spacing.lg },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.md,
-    backgroundColor: colors.card,
-    borderRadius: radius.md,
-    borderWidth: 1,
-    borderColor: colors.border,
-    padding: spacing.md,
+    paddingVertical: spacing.md,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.border,
   },
+  rowIconWrap: { width: 32, alignItems: 'center' },
   rowLabel: { flex: 1, color: colors.text, fontSize: font.sizes.md, fontWeight: '600' },
   logout: {
     flexDirection: 'row',

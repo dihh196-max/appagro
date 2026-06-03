@@ -83,7 +83,9 @@ export function ToolsDrawer({ open, onClose, onSelect }: Props) {
                         onClose();
                       }}
                     >
-                      <ModuleIcon icon={m.icon} color={m.color} size={38} />
+                      <View style={styles.itemIconWrap}>
+                        <ModuleIcon icon={m.icon} size={22} />
+                      </View>
                       <Text style={styles.itemLabel}>{m.label}</Text>
                       <Ionicons name="chevron-forward" size={16} color={colors.textMuted} />
                     </Pressable>
@@ -141,5 +143,6 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm,
   },
   itemPressed: { opacity: 0.6 },
+  itemIconWrap: { width: 28, alignItems: 'center' },
   itemLabel: { flex: 1, color: colors.text, fontSize: font.sizes.md, fontWeight: '600' },
 });
