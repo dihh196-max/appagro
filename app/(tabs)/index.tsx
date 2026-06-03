@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Card } from '../../src/components/Card';
-import { modules, quotes } from '../../src/data/modules';
+import { ToolsDrawer } from '../../src/components/ToolsDrawer';
+import { quotes } from '../../src/data/modules';
 import { colors, spacing, radius, font } from '../../src/theme/theme';
 
 const ARTICLES = [
@@ -21,12 +23,14 @@ const ARTICLES = [
 
 export default function Home() {
   const insets = useSafeAreaInsets();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <LinearGradient
       colors={[colors.bgGradientTop, colors.bg, colors.bgGradientBottom]}
       style={{ flex: 1 }}
     >
+      <ToolsDrawer open={menuOpen} onClose={() => setMenuOpen(false)} />
       <ScrollView
         contentContainerStyle={{ paddingTop: insets.top + spacing.md, paddingBottom: spacing.xxl }}
         showsVerticalScrollIndicator={false}
@@ -34,6 +38,14 @@ export default function Home() {
         {/* Cabeçalho */}
         <View style={styles.header}>
           <View style={styles.userRow}>
+            <Pressable
+              testID="open-menu"
+              onPress={() => setMenuOpen(true)}
+              hitSlop={10}
+              style={styles.menuBtn}
+            >
+              <Ionicons name="menu" size={24} color={colors.text} />
+            </Pressable>
             <View style={styles.avatar}>
               <Ionicons name="person" size={20} color={colors.primary} />
             </View>
@@ -112,24 +124,6 @@ export default function Home() {
           <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
         </Pressable>
 
-        {/* Grade de módulos */}
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Ferramentas</Text>
-          <Text style={styles.sectionLink}>Ver tudo</Text>
-        </View>
-        <View style={styles.grid}>
-          {modules.map((m) => (
-            <Pressable key={m.key} style={styles.gridItem}>
-              <View style={[styles.gridIcon, { backgroundColor: m.color }]}>
-                <Ionicons name={m.icon} size={22} color="#fff" />
-              </View>
-              <Text style={styles.gridLabel} numberOfLines={1}>
-                {m.label}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
-
         {/* Comunidade */}
         <Pressable style={styles.communityWrap}>
           <LinearGradient
@@ -187,6 +181,16 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
   },
   userRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  menuBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: radius.md,
+    backgroundColor: colors.card,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
   avatar: {
     width: 44,
     height: 44,
@@ -290,22 +294,6 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   sectionTitle: { color: colors.text, fontSize: font.sizes.lg, fontWeight: '800' },
-  sectionLink: { color: colors.primary, fontSize: font.sizes.sm, fontWeight: '700' },
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingHorizontal: spacing.lg,
-    rowGap: spacing.lg,
-  },
-  gridItem: { width: '25%', alignItems: 'center', gap: spacing.sm },
-  gridIcon: {
-    width: 52,
-    height: 52,
-    borderRadius: radius.md,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  gridLabel: { color: colors.textMuted, fontSize: font.sizes.xs, fontWeight: '600' },
   communityWrap: { paddingHorizontal: spacing.lg, marginTop: spacing.xl },
   community: {
     flexDirection: 'row',
