@@ -3,8 +3,6 @@ const { chromium } = require('playwright');
 const EXEC = process.env.CHROME_PATH || undefined;
 const BASE = process.env.BASE_URL || 'http://localhost:8090';
 
-// Gera screenshots das telas servindo o build web.
-// Uso: node scripts/serve-dist.js (em outro terminal) e depois node scripts/shoot.js
 (async () => {
   const browser = await chromium.launch(EXEC ? { executablePath: EXEC } : {});
   const ctx = await browser.newContext({
@@ -25,10 +23,16 @@ const BASE = process.env.BASE_URL || 'http://localhost:8090';
   await page.waitForTimeout(2000);
   await page.screenshot({ path: 'shots/home-top.png' });
 
-  // Abre o menu lateral (catálogo de ferramentas)
+  // Abre o menu lateral e captura COLAPSADO
   await page.locator('[data-testid="open-menu"]').first().click();
   await page.waitForTimeout(900);
-  await page.screenshot({ path: 'shots/menu.png' });
+  await page.screenshot({ path: 'shots/menu-collapsed.png' });
+
+  // Expande a categoria "Gestão"
+  await page.getByText('Gestão', { exact: true }).first().click();
+  await page.waitForTimeout(600);
+  await page.screenshot({ path: 'shots/menu-expanded.png' });
+
   // Fecha o menu antes de capturar a home completa
   await page.keyboard.press('Escape').catch(() => {});
   await page.mouse.click(370, 400);

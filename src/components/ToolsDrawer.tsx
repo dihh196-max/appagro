@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Modal,
   View,
@@ -8,12 +8,27 @@ import {
   ScrollView,
   Animated,
   useWindowDimensions,
+  LayoutAnimation,
+  Platform,
+  UIManager,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { modules, moduleCategories } from '../data/modules';
+import {
+  modules,
+  moduleCategories,
+  categoryMeta,
+  type ModuleCategory,
+} from '../data/modules';
 import { ModuleIcon } from './ModuleIcon';
-import { colors, spacing, font } from '../theme/theme';
+import { colors, spacing, radius, font } from '../theme/theme';
+
+if (
+  Platform.OS === 'android' &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 type Props = {
   open: boolean;
@@ -21,11 +36,13 @@ type Props = {
   onSelect?: (key: string) => void;
 };
 
-/** Menu lateral (hambúrguer) com o catálogo de ferramentas por categoria. */
+/** Menu lateral com categorias em accordion — clique na categoria para expandir. */
 export function ToolsDrawer({ open, onClose, onSelect }: Props) {
   const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const panelWidth = Math.min(width * 0.82, 360);
+
+  const [expanded, setExpanded] = useState<ModuleCategory | null>(null);
 
   const translateX = useRef(new Animated.Value(-panelWidth)).current;
   const backdrop = useRef(new Animated.Value(0)).current;
@@ -43,7 +60,14 @@ export function ToolsDrawer({ open, onClose, onSelect }: Props) {
         useNativeDriver: true,
       }),
     ]).start();
+    // Colapsa categorias toda vez que o menu fecha.
+    if (!open) setExpanded(null);
   }, [open, panelWidth, translateX, backdrop]);
+
+  const toggle = (cat: ModuleCategory) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setExpanded((curr) => (curr === cat ? null : cat));
+  };
 
   return (
     <Modal visible={open} transparent animationType="none" onRequestClose={onClose}>
@@ -69,29 +93,53 @@ export function ToolsDrawer({ open, onClose, onSelect }: Props) {
           <Text style={styles.subtitle}>Ferramentas</Text>
 
           <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.list}>
-            {moduleCategories.map((cat) => (
-              <View key={cat} style={styles.group}>
-                <Text style={styles.groupTitle}>{cat}</Text>
-                {modules
-                  .filter((m) => m.category === cat)
-                  .map((m) => (
-                    <Pressable
-                      key={m.key}
-                      style={({ pressed }) => [styles.item, pressed && styles.itemPressed]}
-                      onPress={() => {
-                        onSelect?.(m.key);
-                        onClose();
-                      }}
-                    >
-                      <View style={styles.itemIconWrap}>
-                        <ModuleIcon icon={m.icon} size={22} />
-                      </View>
-                      <Text style={styles.itemLabel}>{m.label}</Text>
-                      <Ionicons name="chevron-forward" size={16} color={colors.textMuted} />
-                    </Pressable>
-                  ))}
-              </View>
-            ))}
+            {moduleCategories.map((cat) => {
+              const isOpen = expanded === cat;
+              const items = modules.filter((m) => m.category === cat);
+              const meta = categoryMeta[cat];
+              return (
+                <View key={cat} style={styles.group}>
+                  <Pressable
+                    style={({ pressed }) => [styles.catRow, pressed && styles.pressed]}
+                    onPress={() => toggle(cat)}
+                  >
+                    <View style={styles.catIcon}>
+                      <Ionicons name={meta.icon} size={20} color={colors.primary} />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.catTitle}>{cat}</Text>
+                      <Text style={styles.catDesc}>{meta.description}</Text>
+                    </View>
+                    <Ionicons
+                      name={isOpen ? 'chevron-up' : 'chevron-down'}
+                      size={18}
+                      color={colors.textMuted}
+                    />
+                  </Pressable>
+
+                  {isOpen && (
+                    <View style={styles.itemsWrap}>
+                      {items.map((m) => (
+                        <Pressable
+                          key={m.key}
+                          style={({ pressed }) => [styles.item, pressed && styles.pressed]}
+                          onPress={() => {
+                            onSelect?.(m.key);
+                            onClose();
+                          }}
+                        >
+                          <View style={styles.itemIconWrap}>
+                            <ModuleIcon icon={m.icon} size={20} />
+                          </View>
+                          <Text style={styles.itemLabel}>{m.label}</Text>
+                          <Ionicons name="chevron-forward" size={14} color={colors.textMuted} />
+                        </Pressable>
+                      ))}
+                    </View>
+                  )}
+                </View>
+              );
+            })}
           </ScrollView>
         </Animated.View>
       </View>
@@ -127,22 +175,36 @@ const styles = StyleSheet.create({
   },
   subtitle: { color: colors.textMuted, fontSize: font.sizes.sm, marginTop: spacing.xs },
   list: { paddingTop: spacing.lg, paddingBottom: spacing.xxl },
-  group: { marginBottom: spacing.lg },
-  groupTitle: {
-    color: colors.primary,
-    fontSize: font.sizes.xs,
-    fontWeight: '800',
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-    marginBottom: spacing.sm,
+  group: { marginBottom: spacing.sm },
+  catRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.md,
+    borderRadius: radius.md,
+    backgroundColor: colors.card,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
+  pressed: { opacity: 0.7 },
+  catIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: radius.sm,
+    backgroundColor: colors.primarySoft,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  catTitle: { color: colors.text, fontSize: font.sizes.md, fontWeight: '800' },
+  catDesc: { color: colors.textMuted, fontSize: font.sizes.xs, marginTop: 2 },
+  itemsWrap: { paddingLeft: spacing.xl, paddingTop: spacing.sm, paddingBottom: spacing.sm },
   item: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.md,
     paddingVertical: spacing.sm,
   },
-  itemPressed: { opacity: 0.6 },
-  itemIconWrap: { width: 28, alignItems: 'center' },
-  itemLabel: { flex: 1, color: colors.text, fontSize: font.sizes.md, fontWeight: '600' },
+  itemIconWrap: { width: 26, alignItems: 'center' },
+  itemLabel: { flex: 1, color: colors.text, fontSize: font.sizes.md, fontWeight: '500' },
 });

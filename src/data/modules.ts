@@ -41,6 +41,13 @@ export const modules: AgroModule[] = [
 
 export const moduleCategories: ModuleCategory[] = ['Campo', 'Gestão', 'Inteligência', 'Conteúdo'];
 
+export const categoryMeta: Record<ModuleCategory, { icon: IoniconName; description: string }> = {
+  Campo: { icon: 'leaf', description: 'Lavoura, solo, clima e insumos' },
+  'Gestão': { icon: 'briefcase', description: 'Finanças, laudos e operação' },
+  'Inteligência': { icon: 'sparkles', description: 'IA aplicada ao campo' },
+  'Conteúdo': { icon: 'library', description: 'Notícias, cursos e biblioteca' },
+};
+
 export type Quote = {
   symbol: string;
   label: string;
