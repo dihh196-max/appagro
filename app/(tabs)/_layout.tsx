@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import { CircleIconButton } from '../../src/components/CircleIconButton';
 import { colors } from '../../src/theme/theme';
 
 export default function TabsLayout() {
@@ -7,55 +7,51 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.textMuted,
+        tabBarShowLabel: false,
         tabBarStyle: {
           backgroundColor: colors.bgGradientBottom,
-          borderTopColor: colors.border,
-          borderTopWidth: 1,
-          height: 64,
-          paddingBottom: 8,
-          paddingTop: 8,
+          borderTopWidth: 0,
+          height: 74,
+          paddingTop: 10,
+          paddingBottom: 14,
         },
-        tabBarLabelStyle: { fontSize: 11, fontWeight: '600' },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Início',
-          tabBarIcon: ({ color, size }) => <Ionicons name="home" size={size} color={color} />,
+          tabBarIcon: ({ focused }) => <CircleIconButton icon="home" active={focused} size={42} />,
         }}
       />
       <Tabs.Screen
         name="clima"
         options={{
-          title: 'Clima',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="partly-sunny" size={size} color={color} />
+          tabBarIcon: ({ focused }) => (
+            <CircleIconButton icon="search" active={focused} size={42} />
           ),
         }}
       />
       <Tabs.Screen
         name="calculos"
         options={{
-          title: 'Cálculos',
-          tabBarIcon: ({ color, size }) => <Ionicons name="calculator" size={size} color={color} />,
+          tabBarIcon: ({ focused }) => (
+            <CircleIconButton icon="add" active={focused} size={42} iconSize={24} />
+          ),
         }}
       />
       <Tabs.Screen
         name="agroia"
         options={{
-          title: 'AgroIA',
-          tabBarIcon: ({ color, size }) => <Ionicons name="sparkles" size={size} color={color} />,
+          tabBarIcon: ({ focused }) => (
+            <CircleIconButton icon="sparkles" active={focused} size={42} />
+          ),
         }}
       />
       <Tabs.Screen
         name="mais"
         options={{
-          title: 'Mais',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="ellipsis-horizontal" size={size} color={color} />
+          tabBarIcon: ({ focused }) => (
+            <CircleIconButton icon="person" active={focused} size={42} />
           ),
         }}
       />
