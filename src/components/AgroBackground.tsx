@@ -1,14 +1,34 @@
 import { ReactNode } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ImageBackground, ImageSourcePropType } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { colors } from '../theme/theme';
 
+type Props = {
+  children: ReactNode;
+  /** Foto opcional. Se informada, é usada no lugar da cena vetorial. */
+  image?: ImageSourcePropType | null;
+};
+
 /**
- * Fundo vetorial que remete ao agro: céu ao entardecer, sol, colinas em
- * camadas e linhas de plantio. Desenhado em código (sem asset binário),
- * funciona offline e blenda para o fundo escuro na área do formulário.
+ * Fundo da tela de login.
+ * - Se `image` for informada, mostra a FOTO com um scrim escuro p/ legibilidade.
+ * - Caso contrário, desenha uma cena vetorial do agro (céu ao entardecer, sol,
+ *   colinas e linhas de plantio) — funciona offline, sem asset binário.
  */
-export function AgroBackground({ children }: { children: ReactNode }) {
+export function AgroBackground({ children, image }: Props) {
+  if (image) {
+    return (
+      <ImageBackground source={image} resizeMode="cover" style={styles.root}>
+        <LinearGradient
+          colors={['rgba(10,26,47,0.35)', 'rgba(10,26,47,0.8)', colors.bg]}
+          locations={[0, 0.55, 1]}
+          style={StyleSheet.absoluteFill}
+        />
+        <View style={styles.content}>{children}</View>
+      </ImageBackground>
+    );
+  }
+
   return (
     <View style={styles.root}>
       {/* Céu */}

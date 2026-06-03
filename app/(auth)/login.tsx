@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AgroBackground } from '../../src/components/AgroBackground';
 import { Field } from '../../src/components/Field';
+import { loginBackground } from '../../src/config/branding';
 import { colors, spacing, radius, font } from '../../src/theme/theme';
 
 export default function Login() {
@@ -17,7 +18,7 @@ export default function Login() {
   };
 
   return (
-    <AgroBackground>
+    <AgroBackground image={loginBackground}>
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
           <Pressable onPress={() => router.back()} hitSlop={12} style={styles.back}>

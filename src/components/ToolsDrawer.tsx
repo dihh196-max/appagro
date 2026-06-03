@@ -12,7 +12,8 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { modules, moduleCategories } from '../data/modules';
-import { colors, spacing, radius, font } from '../theme/theme';
+import { ModuleIcon } from './ModuleIcon';
+import { colors, spacing, font } from '../theme/theme';
 
 type Props = {
   open: boolean;
@@ -82,9 +83,7 @@ export function ToolsDrawer({ open, onClose, onSelect }: Props) {
                         onClose();
                       }}
                     >
-                      <View style={[styles.itemIcon, { backgroundColor: m.color }]}>
-                        <Ionicons name={m.icon} size={16} color="#fff" />
-                      </View>
+                      <ModuleIcon icon={m.icon} color={m.color} size={38} />
                       <Text style={styles.itemLabel}>{m.label}</Text>
                       <Ionicons name="chevron-forward" size={16} color={colors.textMuted} />
                     </Pressable>
@@ -142,12 +141,5 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm,
   },
   itemPressed: { opacity: 0.6 },
-  itemIcon: {
-    width: 34,
-    height: 34,
-    borderRadius: radius.sm,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   itemLabel: { flex: 1, color: colors.text, fontSize: font.sizes.md, fontWeight: '600' },
 });

@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { modules } from '../../src/data/modules';
+import { ModuleIcon } from '../../src/components/ModuleIcon';
 import { colors, spacing, radius, font } from '../../src/theme/theme';
 
 export default function Mais() {
@@ -24,9 +25,7 @@ export default function Mais() {
         <View style={styles.list}>
           {modules.map((m) => (
             <Pressable key={m.key} style={styles.row}>
-              <View style={[styles.icon, { backgroundColor: m.color }]}>
-                <Ionicons name={m.icon} size={18} color="#fff" />
-              </View>
+              <ModuleIcon icon={m.icon} color={m.color} size={38} />
               <Text style={styles.rowLabel}>{m.label}</Text>
               <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
             </Pressable>
@@ -56,7 +55,6 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     padding: spacing.md,
   },
-  icon: { width: 36, height: 36, borderRadius: radius.sm, alignItems: 'center', justifyContent: 'center' },
   rowLabel: { flex: 1, color: colors.text, fontSize: font.sizes.md, fontWeight: '600' },
   logout: {
     flexDirection: 'row',
