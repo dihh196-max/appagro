@@ -12,7 +12,7 @@ type Props = {
 /**
  * Fundo da tela de login.
  * - Se `image` for informada e carregar, mostra a FOTO completa (contain) com
- *   um scrim na base para o formulário ficar legível.
+ *   um scrim mínimo só na borda de baixo para manter a arte inteira visível.
  * - Se não houver foto (ou ela falhar ao carregar), desenha uma cena vetorial
  *   do agro (céu ao entardecer, sol, colinas, plantio) — funciona offline.
  */
@@ -27,10 +27,11 @@ export function AgroBackground({ children, image }: Props) {
         style={styles.root}
         onError={() => setFailed(true)}
       >
-        {/* Scrim que escurece a metade de baixo (onde fica o formulário). */}
+        {/* Scrim BEM leve, só na borda de baixo — mantém a foto inteira visível
+            (mulher, trator e a área escura da arte) e ainda blenda no fim. */}
         <LinearGradient
-          colors={['transparent', 'rgba(8,22,39,0.45)', 'rgba(8,22,39,0.92)']}
-          locations={[0, 0.5, 1]}
+          colors={['transparent', 'transparent', 'rgba(8,22,39,0.55)']}
+          locations={[0, 0.78, 1]}
           style={StyleSheet.absoluteFill}
         />
         <View style={styles.content}>{children}</View>
