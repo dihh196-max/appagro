@@ -91,7 +91,7 @@ export default function Login() {
 }
 
 const styles = StyleSheet.create({
-  content: { padding: spacing.xl, gap: spacing.lg, flexGrow: 1, justifyContent: 'center' },
+  content: { padding: spacing.xl, gap: spacing.lg, flexGrow: 1, justifyContent: 'flex-end', paddingBottom: spacing.xxl },
   back: { width: 40, height: 40, justifyContent: 'center', position: 'absolute', top: spacing.sm, left: spacing.lg },
   brandBlock: { alignItems: 'center', gap: spacing.md, marginBottom: spacing.sm },
   logo: {

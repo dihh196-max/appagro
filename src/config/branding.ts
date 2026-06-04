@@ -3,12 +3,15 @@ import type { ImageSourcePropType } from 'react-native';
 /**
  * Foto de fundo da tela de login.
  *
- * Para usar uma FOTO REAL do agro:
- *   1) Coloque o arquivo na pasta `assets/` (ex.: assets/login-bg.jpg)
- *   2) Troque a linha abaixo por:
- *        export const loginBackground: ImageSourcePropType | null =
- *          require('../../assets/login-bg.jpg');
+ * Atualmente usa a arte enviada para o repositório (branch `main`) via URL
+ * pública do GitHub — funciona sem precisar reenviar o arquivo.
  *
- * Enquanto for `null`, o login usa o fundo vetorial (entardecer no campo).
+ * Para usar uma foto LOCAL (offline, recomendado em produção):
+ *   1) Coloque o arquivo em `assets/` (ex.: assets/login-bg.png)
+ *   2) Troque por: require('../../assets/login-bg.png')
+ *
+ * Para voltar ao fundo vetorial (entardecer desenhado), use `null`.
  */
-export const loginBackground: ImageSourcePropType | null = null;
+export const loginBackground: ImageSourcePropType | null = {
+  uri: 'https://raw.githubusercontent.com/dihh196-max/appagro/main/Story%20do%20instagram%20agroneg%C3%B3cio%20e%20tecnologia%20verde%20e%20moderno.png',
+};

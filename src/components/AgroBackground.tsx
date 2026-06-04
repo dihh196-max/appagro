@@ -1,27 +1,36 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { View, StyleSheet, ImageBackground, ImageSourcePropType } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { colors } from '../theme/theme';
 
 type Props = {
   children: ReactNode;
-  /** Foto opcional. Se informada, é usada no lugar da cena vetorial. */
+  /** Foto opcional. Se informada (e carregar), é usada no lugar da cena vetorial. */
   image?: ImageSourcePropType | null;
 };
 
 /**
  * Fundo da tela de login.
- * - Se `image` for informada, mostra a FOTO com um scrim escuro p/ legibilidade.
- * - Caso contrário, desenha uma cena vetorial do agro (céu ao entardecer, sol,
- *   colinas e linhas de plantio) — funciona offline, sem asset binário.
+ * - Se `image` for informada e carregar, mostra a FOTO com um leve scrim na
+ *   base para o formulário ficar legível.
+ * - Se não houver foto (ou ela falhar ao carregar), desenha uma cena vetorial
+ *   do agro (céu ao entardecer, sol, colinas, plantio) — funciona offline.
  */
 export function AgroBackground({ children, image }: Props) {
-  if (image) {
+  const [failed, setFailed] = useState(false);
+
+  if (image && !failed) {
     return (
-      <ImageBackground source={image} resizeMode="cover" style={styles.root}>
+      <ImageBackground
+        source={image}
+        resizeMode="cover"
+        style={styles.root}
+        onError={() => setFailed(true)}
+      >
+        {/* Scrim que escurece a metade de baixo (onde fica o formulário). */}
         <LinearGradient
-          colors={['rgba(10,26,47,0.35)', 'rgba(10,26,47,0.8)', colors.bg]}
-          locations={[0, 0.55, 1]}
+          colors={['transparent', 'rgba(8,22,39,0.45)', 'rgba(8,22,39,0.92)']}
+          locations={[0, 0.5, 1]}
           style={StyleSheet.absoluteFill}
         />
         <View style={styles.content}>{children}</View>
