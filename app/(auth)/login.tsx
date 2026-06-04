@@ -41,6 +41,7 @@ export default function Login() {
             <Field
               label="E-mail"
               icon="mail"
+              variant="glass"
               placeholder="seu@email.com"
               keyboardType="email-address"
               autoCapitalize="none"
@@ -50,6 +51,7 @@ export default function Login() {
             <Field
               label="Senha"
               icon="lock-closed"
+              variant="glass"
               placeholder="••••••••"
               secureTextEntry
               value={password}

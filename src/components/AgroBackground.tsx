@@ -11,8 +11,8 @@ type Props = {
 
 /**
  * Fundo da tela de login.
- * - Se `image` for informada e carregar, mostra a FOTO com um leve scrim na
- *   base para o formulário ficar legível.
+ * - Se `image` for informada e carregar, mostra a FOTO completa (contain) com
+ *   um scrim na base para o formulário ficar legível.
  * - Se não houver foto (ou ela falhar ao carregar), desenha uma cena vetorial
  *   do agro (céu ao entardecer, sol, colinas, plantio) — funciona offline.
  */
@@ -23,7 +23,7 @@ export function AgroBackground({ children, image }: Props) {
     return (
       <ImageBackground
         source={image}
-        resizeMode="cover"
+        resizeMode="contain"
         style={styles.root}
         onError={() => setFailed(true)}
       >
