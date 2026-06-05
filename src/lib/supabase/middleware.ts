@@ -13,8 +13,17 @@ const PUBLIC_PATHS = [
   "/api/health",
 ];
 
+/** Rotas que exigem usuário logado, mas funcionam sem organização. */
+const AUTH_NO_ORG_PATHS = ["/onboarding"];
+
 function isPublicPath(pathname: string) {
   return PUBLIC_PATHS.some(
+    (p) => pathname === p || pathname.startsWith(`${p}/`)
+  );
+}
+
+function isAuthNoOrgPath(pathname: string) {
+  return AUTH_NO_ORG_PATHS.some(
     (p) => pathname === p || pathname.startsWith(`${p}/`)
   );
 }
@@ -78,11 +87,15 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Já logado tentando acessar /login ou /signup → joga pro dashboard
+  // (o /dashboard depois pode redirecionar pra /onboarding se faltar org)
   if (user && (pathname === "/login" || pathname === "/signup")) {
     const dashUrl = request.nextUrl.clone();
     dashUrl.pathname = "/dashboard";
     return NextResponse.redirect(dashUrl);
   }
+
+  // Silencia o lint não usado quando o helper for útil no futuro
+  void isAuthNoOrgPath;
 
   return supabaseResponse;
 }

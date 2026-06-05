@@ -1,17 +1,18 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getCurrentOrg } from "@/lib/active-org";
 import { logout } from "./actions";
 
 const NAV = [
-  { href: "/dashboard", label: "Dashboard", icon: "📊" },
+  { href: "/dashboard",    label: "Dashboard",    icon: "📊" },
   { href: "/calculadoras", label: "Calculadoras", icon: "🧮" },
-  { href: "/solos", label: "Solos", icon: "🌍" },
-  { href: "/fertilidade", label: "Fertilidade", icon: "🧪" },
-  { href: "/biblioteca", label: "Biblioteca", icon: "📚" },
-  { href: "/cursos", label: "Cursos", icon: "🎓" },
+  { href: "/solos",        label: "Solos",        icon: "🌍" },
+  { href: "/fertilidade",  label: "Fertilidade",  icon: "🧪" },
+  { href: "/biblioteca",   label: "Biblioteca",   icon: "📚" },
+  { href: "/cursos",       label: "Cursos",       icon: "🎓" },
   { href: "/agroquimicos", label: "Agroquímicos", icon: "💊" },
-  { href: "/laudos", label: "Laudos", icon: "📄" },
+  { href: "/laudos",       label: "Laudos",       icon: "📄" },
 ];
 
 export default async function AppLayout({
@@ -26,6 +27,10 @@ export default async function AppLayout({
 
   if (!user) redirect("/login");
 
+  // Multi-tenant: precisa ter pelo menos uma organização para usar o app
+  const org = await getCurrentOrg();
+  if (!org) redirect("/onboarding");
+
   return (
     <div className="min-h-screen flex">
       {/* Sidebar */}
@@ -37,6 +42,21 @@ export default async function AppLayout({
             </span>
             <span className="font-semibold text-lg tracking-tight">AppAgro</span>
           </Link>
+        </div>
+
+        {/* Org ativa */}
+        <div className="mx-3 mb-4 rounded-xl border border-brand-100 bg-white p-3">
+          <div className="text-xs uppercase tracking-wide text-brand-700/70">
+            Organização
+          </div>
+          <div className="mt-0.5 font-semibold text-sm truncate">{org.name}</div>
+          <div className="flex items-center gap-2 mt-1 text-xs text-foreground/60">
+            <span className="inline-block rounded-full bg-brand-100 px-1.5 py-0.5 uppercase">
+              {org.plan}
+            </span>
+            <span>·</span>
+            <span className="capitalize">{org.role}</span>
+          </div>
         </div>
 
         <nav className="flex-1 px-3 space-y-1">
