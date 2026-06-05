@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { ListRow, PageHeader, SectionLabel } from "@/components/page-header";
 
 export const metadata = { title: "Calculadora Agrícola" };
 
@@ -26,47 +26,41 @@ const ESPECIALIZADAS: Item[] = [
 
 export default function CalculadoraPage() {
   return (
-    <div className="px-6 md:px-8 py-8 max-w-3xl mx-auto">
-      <header className="mb-6">
-        <h1 className="text-3xl font-bold">Calculadora Agrícola</h1>
-        <p className="text-sm text-brand-600">Cálculos essenciais para o campo</p>
-      </header>
+    <>
+      <PageHeader
+        title="Calculadora Agrícola"
+        subtitle="Cálculos essenciais para o campo"
+      />
 
-      <div className="space-y-3">
+      <div className="px-5 space-y-2.5">
         {PRINCIPAIS.map((item) => (
-          <CalcRow key={item.slug} item={item} />
+          <ListRow
+            key={item.slug}
+            href={`/calculadoras/${item.slug}`}
+            icon={item.icon}
+            iconBg={item.bg}
+            title={item.title}
+            subtitle={item.desc}
+          />
         ))}
       </div>
 
-      <h2 className="mt-10 mb-3 text-xs font-semibold tracking-widest text-brand-700/70">
-        FERRAMENTAS ESPECIALIZADAS
-      </h2>
+      <div className="px-5">
+        <SectionLabel>FERRAMENTAS ESPECIALIZADAS</SectionLabel>
 
-      <div className="space-y-3">
-        {ESPECIALIZADAS.map((item) => (
-          <CalcRow key={item.slug} item={item} />
-        ))}
+        <div className="space-y-2.5">
+          {ESPECIALIZADAS.map((item) => (
+            <ListRow
+              key={item.slug}
+              href={`/calculadoras/${item.slug}`}
+              icon={item.icon}
+              iconBg={item.bg}
+              title={item.title}
+              subtitle={item.desc}
+            />
+          ))}
+        </div>
       </div>
-    </div>
-  );
-}
-
-function CalcRow({ item }: { item: Item }) {
-  return (
-    <Link
-      href={`/calculadoras/${item.slug}`}
-      className="flex items-center gap-4 p-4 rounded-2xl border border-brand-100 bg-white hover:shadow-md hover:border-brand-200 transition"
-    >
-      <span
-        className={`inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-2xl text-white ${item.bg}`}
-      >
-        {item.icon}
-      </span>
-      <span className="min-w-0 flex-1">
-        <span className="block font-semibold text-foreground">{item.title}</span>
-        <span className="block text-sm text-foreground/60 truncate">{item.desc}</span>
-      </span>
-      <span className="text-foreground/40">›</span>
-    </Link>
+    </>
   );
 }

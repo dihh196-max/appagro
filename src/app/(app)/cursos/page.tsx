@@ -6,7 +6,8 @@ export default function Page() {
       title="Cursos"
       subtitle="Capacitação para o agronegócio"
       icone="🎓"
-      descricao="Catálogo oficial + cursos parceiros, com 15% de comissão por venda. LMS leve (módulos, aulas, progresso) e emissão de certificados."
+      descricao="Catálogo oficial + cursos parceiros (15% de comissão). LMS leve com módulos, aulas, progresso e emissão de certificados."
+      cta={{ label: "Anunciar", href: "#" }}
     />
   );
 }

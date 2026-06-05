@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { PageHeader } from "@/components/page-header";
 
 export function CalcShell({
   title,
@@ -10,19 +10,10 @@ export function CalcShell({
   children: React.ReactNode;
 }) {
   return (
-    <div className="px-6 md:px-8 py-8 max-w-3xl mx-auto">
-      <header className="mb-6">
-        <Link
-          href="/calculadoras"
-          className="text-sm text-brand-700 hover:underline inline-flex items-center gap-1"
-        >
-          ← Calculadora Agrícola
-        </Link>
-        <h1 className="mt-2 text-3xl font-bold">{title}</h1>
-        {subtitle && <p className="text-sm text-foreground/60">{subtitle}</p>}
-      </header>
-      {children}
-    </div>
+    <>
+      <PageHeader title={title} subtitle={subtitle} back="/calculadoras" />
+      <div className="px-5 pb-6">{children}</div>
+    </>
   );
 }
 
@@ -37,9 +28,9 @@ export function Field({
 }) {
   return (
     <label className="block">
-      <span className="block text-sm font-medium mb-1">{label}</span>
+      <span className="block text-sm font-medium mb-1 text-brand-900">{label}</span>
       {children}
-      {hint && <span className="block mt-1 text-xs text-foreground/60">{hint}</span>}
+      {hint && <span className="block mt-1 text-xs text-muted">{hint}</span>}
     </label>
   );
 }
@@ -55,10 +46,10 @@ export function NumInput(
         inputMode="decimal"
         step="any"
         {...rest}
-        className={`w-full rounded-lg border border-brand-200 px-3 py-2 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200 ${suffix ? "pr-16" : ""} ${className ?? ""}`}
+        className={`w-full rounded-xl bg-white border border-black/10 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200 ${suffix ? "pr-16" : ""} ${className ?? ""}`}
       />
       {suffix && (
-        <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-foreground/50">
+        <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted">
           {suffix}
         </span>
       )}
@@ -74,9 +65,9 @@ export function ResultCard({
   children?: React.ReactNode;
 }) {
   return (
-    <div className="mt-6 rounded-2xl border border-brand-200 bg-brand-50 p-6">
+    <div className="mt-6 rounded-2xl bg-brand-600 text-white p-6 shadow-sm">
       {highlight && (
-        <div className="text-3xl md:text-4xl font-bold text-brand-700">{highlight}</div>
+        <div className="text-3xl md:text-4xl font-bold">{highlight}</div>
       )}
       {children}
     </div>

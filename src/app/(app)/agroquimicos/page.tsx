@@ -4,9 +4,10 @@ export default function Page() {
   return (
     <StubEmBreve
       title="Agroquímicos"
-      subtitle="Catálogo de defensivos e bulas"
+      subtitle="5 produtos cadastrados"
       icone="💊"
-      descricao="Catálogo oficial + cadastros do tenant. Busca por produto/ingrediente, filtro por classe (herbicida, inseticida, fungicida), classes toxicológicas e culturas aprovadas."
+      descricao="Catálogo oficial + cadastros da fazenda. Busca por nome ou ingrediente, filtro por categoria (herbicida, inseticida, fungicida) e classes toxicológicas."
+      cta={{ label: "Cadastrar", href: "#" }}
     />
   );
 }

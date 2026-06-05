@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { buscarGrupo, listarPorGrupo, type GrupoNutriente } from "@/content/nutrientes";
+import { PageHeader } from "@/components/page-header";
 
-// Tailwind 4 faz purge das classes — mapa estático evita classes dinâmicas
 const COR_TEXTO: Record<string, string> = {
   emerald: "text-emerald-600",
   blue: "text-blue-600",
@@ -30,35 +30,26 @@ export default async function GrupoPage({ params }: Props) {
   const nutrientes = listarPorGrupo(g.slug as GrupoNutriente);
 
   return (
-    <div className="px-6 md:px-8 py-8 max-w-3xl mx-auto">
-      <header className="mb-6">
-        <Link href="/fertilidade" className="text-sm text-brand-700 hover:underline">
-          ← Fertilidade do Solo
-        </Link>
-        <h1 className="mt-2 text-3xl font-bold">{g.titulo}</h1>
-        <p className="text-sm text-brand-600">{g.subtitulo}</p>
-      </header>
+    <>
+      <PageHeader title={g.titulo} subtitle={g.subtitulo} back="/fertilidade" />
 
-      <div className="grid sm:grid-cols-2 gap-3">
+      <div className="px-5 grid grid-cols-2 gap-2.5">
         {nutrientes.map((n) => (
           <Link
             key={n.slug}
             href={`/fertilidade/${g.slug}/${n.slug}`}
-            className="p-5 rounded-2xl border border-brand-100 bg-white hover:shadow-md hover:border-brand-200 transition"
+            className="p-4 rounded-2xl border border-black/5 bg-white hover:border-brand-200 hover:shadow-sm transition"
           >
-            <div className="flex items-baseline gap-3">
-              <span className={`text-3xl font-bold ${COR_TEXTO[n.cor]}`}>{n.simbolo}</span>
-              <span className="font-semibold text-foreground">{n.nome}</span>
-            </div>
-            <p className="mt-2 text-sm text-foreground/70 line-clamp-2">{n.papel}</p>
+            <div className={`text-3xl font-bold ${COR_TEXTO[n.cor]}`}>{n.simbolo}</div>
+            <div className="mt-1 font-semibold text-brand-900 text-sm">{n.nome}</div>
             {n.mobilidade && (
-              <span className="mt-3 inline-block rounded-full bg-brand-50 px-2 py-0.5 text-xs text-brand-700">
-                {n.mobilidade} na planta
+              <span className="mt-2 inline-block rounded-full bg-brand-50 px-2 py-0.5 text-[10px] text-brand-700">
+                {n.mobilidade}
               </span>
             )}
           </Link>
         ))}
       </div>
-    </div>
+    </>
   );
 }

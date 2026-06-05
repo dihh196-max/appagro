@@ -6,7 +6,8 @@ export default function Page() {
       title="Laudos Agronômicos"
       subtitle="Relatórios e pareceres técnicos"
       icone="📄"
-      descricao="CRUD multi-tenant + geração de PDF server-side. Tipos: Solo, Fitossanidade, Irrigação. Status: rascunho → em análise → finalizado. Link público com token para compartilhamento."
+      descricao="CRUD multi-tenant + geração de PDF. Tipos: Solo, Fitossanidade, Irrigação. Status: rascunho → em análise → finalizado. Link compartilhável com token."
+      cta={{ label: "Novo", href: "#" }}
     />
   );
 }
