@@ -1,210 +1,92 @@
-import { useEffect, useRef, useState } from 'react';
-import {
-  Modal,
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  ScrollView,
-  Animated,
-  useWindowDimensions,
-  LayoutAnimation,
-  Platform,
-  UIManager,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+"use client";
+import { useEffect, useState } from "react";
+import { X, ChevronDown, ChevronRight, ChevronUp } from "lucide-react";
+import clsx from "clsx";
 import {
   modules,
   moduleCategories,
   categoryMeta,
   type ModuleCategory,
-} from '../data/modules';
-import { ModuleIcon } from './ModuleIcon';
-import { colors, spacing, radius, font } from '../theme/theme';
+} from "@/data/modules";
 
-if (
-  Platform.OS === 'android' &&
-  UIManager.setLayoutAnimationEnabledExperimental
-) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
+type Props = { open: boolean; onClose: () => void };
 
-type Props = {
-  open: boolean;
-  onClose: () => void;
-  onSelect?: (key: string) => void;
-};
-
-/** Menu lateral com categorias em accordion — clique na categoria para expandir. */
-export function ToolsDrawer({ open, onClose, onSelect }: Props) {
-  const { width } = useWindowDimensions();
-  const insets = useSafeAreaInsets();
-  const panelWidth = Math.min(width * 0.82, 360);
-
+/** Menu lateral com categorias em accordion (apenas categorias expostas). */
+export function ToolsDrawer({ open, onClose }: Props) {
   const [expanded, setExpanded] = useState<ModuleCategory | null>(null);
 
-  const translateX = useRef(new Animated.Value(-panelWidth)).current;
-  const backdrop = useRef(new Animated.Value(0)).current;
-
   useEffect(() => {
-    Animated.parallel([
-      Animated.timing(translateX, {
-        toValue: open ? 0 : -panelWidth,
-        duration: 240,
-        useNativeDriver: true,
-      }),
-      Animated.timing(backdrop, {
-        toValue: open ? 1 : 0,
-        duration: 240,
-        useNativeDriver: true,
-      }),
-    ]).start();
-    // Colapsa categorias toda vez que o menu fecha.
     if (!open) setExpanded(null);
-  }, [open, panelWidth, translateX, backdrop]);
-
-  const toggle = (cat: ModuleCategory) => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setExpanded((curr) => (curr === cat ? null : cat));
-  };
+  }, [open]);
 
   return (
-    <Modal visible={open} transparent animationType="none" onRequestClose={onClose}>
-      <View style={styles.root}>
-        <Animated.View style={[styles.backdrop, { opacity: backdrop }]}>
-          <Pressable style={{ flex: 1 }} onPress={onClose} />
-        </Animated.View>
+    <>
+      <button
+        type="button"
+        aria-label="Fechar menu"
+        onClick={onClose}
+        className={clsx(
+          "fixed inset-0 z-40 bg-black/55 transition-opacity",
+          open ? "opacity-100" : "opacity-0 pointer-events-none",
+        )}
+      />
+      <aside
+        aria-hidden={!open}
+        className={clsx(
+          "fixed top-0 bottom-0 left-0 z-50 w-[82%] max-w-[360px] bg-bg-bottom",
+          "border-r border-border px-4 py-6 overflow-y-auto",
+          "transition-transform duration-200 ease-out",
+          open ? "translate-x-0" : "-translate-x-full",
+        )}
+      >
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-xl font-extrabold">
+            Agro<span className="text-brand">Net</span>
+          </p>
+          <button type="button" aria-label="Fechar" onClick={onClose} className="w-9 h-9 rounded-full bg-card flex items-center justify-center">
+            <X size={20} />
+          </button>
+        </div>
+        <p className="text-fg-muted text-sm mb-6">Ferramentas</p>
 
-        <Animated.View
-          style={[
-            styles.panel,
-            { width: panelWidth, paddingTop: insets.top + spacing.lg, transform: [{ translateX }] },
-          ]}
-        >
-          <View style={styles.header}>
-            <Text style={styles.brand}>
-              Agro<Text style={{ color: colors.primary }}>Net</Text>
-            </Text>
-            <Pressable onPress={onClose} hitSlop={10} style={styles.closeBtn}>
-              <Ionicons name="close" size={22} color={colors.text} />
-            </Pressable>
-          </View>
-          <Text style={styles.subtitle}>Ferramentas</Text>
+        <div className="space-y-2">
+          {moduleCategories.map((cat) => {
+            const isOpen = expanded === cat;
+            const items = modules.filter((m) => m.category === cat);
+            const Meta = categoryMeta[cat];
+            return (
+              <div key={cat}>
+                <button type="button" onClick={() => setExpanded(isOpen ? null : cat)} className="w-full rounded-[14px] bg-card border border-border px-3 py-3 flex items-center gap-3 hover:bg-card-elev transition">
+                  <span className="w-9 h-9 rounded-[8px] bg-brand/15 flex items-center justify-center">
+                    <Meta.icon size={20} className="text-brand" />
+                  </span>
+                  <span className="flex-1 text-left">
+                    <span className="block font-extrabold">{cat}</span>
+                    <span className="block text-xs text-fg-muted">{Meta.description}</span>
+                  </span>
+                  {isOpen ? <ChevronUp size={18} className="text-fg-muted" /> : <ChevronDown size={18} className="text-fg-muted" />}
+                </button>
 
-          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.list}>
-            {moduleCategories.map((cat) => {
-              const isOpen = expanded === cat;
-              const items = modules.filter((m) => m.category === cat);
-              const meta = categoryMeta[cat];
-              return (
-                <View key={cat} style={styles.group}>
-                  <Pressable
-                    style={({ pressed }) => [styles.catRow, pressed && styles.pressed]}
-                    onPress={() => toggle(cat)}
-                  >
-                    <View style={styles.catIcon}>
-                      <Ionicons name={meta.icon} size={20} color={colors.primary} />
-                    </View>
-                    <View style={{ flex: 1 }}>
-                      <Text style={styles.catTitle}>{cat}</Text>
-                      <Text style={styles.catDesc}>{meta.description}</Text>
-                    </View>
-                    <Ionicons
-                      name={isOpen ? 'chevron-up' : 'chevron-down'}
-                      size={18}
-                      color={colors.textMuted}
-                    />
-                  </Pressable>
-
-                  {isOpen && (
-                    <View style={styles.itemsWrap}>
-                      {items.map((m) => (
-                        <Pressable
-                          key={m.key}
-                          style={({ pressed }) => [styles.item, pressed && styles.pressed]}
-                          onPress={() => {
-                            onSelect?.(m.key);
-                            onClose();
-                          }}
-                        >
-                          <View style={styles.itemIconWrap}>
-                            <ModuleIcon icon={m.icon} size={20} />
-                          </View>
-                          <Text style={styles.itemLabel}>{m.label}</Text>
-                          <Ionicons name="chevron-forward" size={14} color={colors.textMuted} />
-                        </Pressable>
-                      ))}
-                    </View>
-                  )}
-                </View>
-              );
-            })}
-          </ScrollView>
-        </Animated.View>
-      </View>
-    </Modal>
+                {isOpen && (
+                  <ul className="pl-6 pt-2 pb-1 space-y-1">
+                    {items.map((m) => (
+                      <li key={m.key}>
+                        <button type="button" onClick={onClose} className="w-full flex items-center gap-3 py-2 hover:opacity-70 transition">
+                          <span className="w-7 text-center">
+                            <m.icon size={18} className="text-white" />
+                          </span>
+                          <span className="flex-1 text-left font-medium">{m.label}</span>
+                          <ChevronRight size={14} className="text-fg-muted" />
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </aside>
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  root: { flex: 1, flexDirection: 'row' },
-  backdrop: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.55)',
-  },
-  panel: {
-    backgroundColor: colors.bgGradientBottom,
-    borderRightWidth: 1,
-    borderRightColor: colors.border,
-    paddingHorizontal: spacing.lg,
-  },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  brand: { color: colors.text, fontSize: font.sizes.xl, fontWeight: '800' },
-  closeBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 999,
-    backgroundColor: colors.card,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  subtitle: { color: colors.textMuted, fontSize: font.sizes.sm, marginTop: spacing.xs },
-  list: { paddingTop: spacing.lg, paddingBottom: spacing.xxl },
-  group: { marginBottom: spacing.sm },
-  catRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.md,
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.md,
-    borderRadius: radius.md,
-    backgroundColor: colors.card,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  pressed: { opacity: 0.7 },
-  catIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: radius.sm,
-    backgroundColor: colors.primarySoft,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  catTitle: { color: colors.text, fontSize: font.sizes.md, fontWeight: '800' },
-  catDesc: { color: colors.textMuted, fontSize: font.sizes.xs, marginTop: 2 },
-  itemsWrap: { paddingLeft: spacing.xl, paddingTop: spacing.sm, paddingBottom: spacing.sm },
-  item: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.md,
-    paddingVertical: spacing.sm,
-  },
-  itemIconWrap: { width: 26, alignItems: 'center' },
-  itemLabel: { flex: 1, color: colors.text, fontSize: font.sizes.md, fontWeight: '500' },
-});

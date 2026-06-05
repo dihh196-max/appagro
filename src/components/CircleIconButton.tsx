@@ -1,89 +1,36 @@
-import { ReactNode } from 'react';
-import { View, StyleSheet, Pressable, ViewStyle } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../theme/theme';
+import { ButtonHTMLAttributes, ReactNode } from "react";
+import clsx from "clsx";
 
-type Props = {
-  icon: keyof typeof Ionicons.glyphMap;
-  /** Diâmetro do círculo. */
+type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
+  children: ReactNode;
   size?: number;
-  /** Tamanho do glifo. Padrão: 50% do `size`. */
-  iconSize?: number;
-  /** Cor da borda e do ícone. Padrão: verde da marca. */
-  color?: string;
-  /** Estado "selecionado" — preenche o círculo com tint suave. */
   active?: boolean;
-  /** Mostra um ponto vermelho de notificação. */
   badge?: boolean;
-  onPress?: () => void;
-  style?: ViewStyle;
-  testID?: string;
 };
 
-/**
- * Ícone "branco" envolto por uma borda colorida em círculo — a assinatura
- * visual do app (header, ações do feed, abas inferiores).
- */
 export function CircleIconButton({
-  icon,
-  size = 40,
-  iconSize,
-  color = colors.primary,
+  children,
+  size = 42,
   active = false,
   badge = false,
-  onPress,
-  style,
-  testID,
+  className,
+  ...rest
 }: Props) {
-  const content: ReactNode = (
-    <View
-      style={[
-        styles.wrap,
-        {
-          width: size,
-          height: size,
-          borderRadius: size / 2,
-          borderColor: color,
-          backgroundColor: active ? 'rgba(46,227,138,0.15)' : 'transparent',
-        },
-        style,
-      ]}
-    >
-      <Ionicons
-        name={icon}
-        size={iconSize ?? Math.round(size * 0.5)}
-        color={active ? color : '#FFFFFF'}
-      />
-      {badge && <View style={styles.badge} />}
-    </View>
-  );
-
-  if (!onPress) return content;
   return (
-    <Pressable
-      hitSlop={6}
-      onPress={onPress}
-      testID={testID}
-      style={({ pressed }) => pressed && { opacity: 0.7 }}
+    <button
+      {...rest}
+      style={{ width: size, height: size }}
+      className={clsx(
+        "relative inline-flex items-center justify-center rounded-full border-[1.5px] border-brand transition",
+        active ? "bg-brand/15 text-brand" : "bg-transparent text-fg",
+        "hover:bg-brand/10 active:scale-95",
+        className,
+      )}
     >
-      {content}
-    </Pressable>
+      {children}
+      {badge && (
+        <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-down" />
+      )}
+    </button>
   );
 }
-
-const styles = StyleSheet.create({
-  wrap: {
-    borderWidth: 1.5,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  badge: {
-    position: 'absolute',
-    top: 4,
-    right: 4,
-    width: 9,
-    height: 9,
-    borderRadius: 999,
-    backgroundColor: '#FF6B6B',
-  },
-});

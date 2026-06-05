@@ -1,43 +1,21 @@
-import { View, Text, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { Screen } from './Screen';
-import { colors, spacing, font } from '../theme/theme';
+import type { LucideIcon } from "lucide-react";
 
-type Props = {
+export function Placeholder({
+  title,
+  description,
+  Icon,
+}: {
   title: string;
-  icon: keyof typeof Ionicons.glyphMap;
-  description?: string;
-};
-
-/** Tela base para módulos ainda não implementados. */
-export function Placeholder({ title, icon, description }: Props) {
+  description: string;
+  Icon: LucideIcon;
+}) {
   return (
-    <Screen>
-      <View style={styles.wrap}>
-        <View style={styles.iconWrap}>
-          <Ionicons name={icon} size={40} color={colors.primary} />
-        </View>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.desc}>
-          {description ?? 'Esta tela será construída a partir dos seus prints.'}
-        </Text>
-      </View>
-    </Screen>
+    <div className="flex flex-col items-center justify-center h-full px-6 text-center gap-5 py-16">
+      <div className="w-20 h-20 rounded-full bg-card border border-border-strong flex items-center justify-center">
+        <Icon size={36} className="text-brand" />
+      </div>
+      <h1 className="text-2xl font-extrabold">{title}</h1>
+      <p className="text-fg-muted leading-relaxed max-w-xs">{description}</p>
+    </div>
   );
 }
-
-const styles = StyleSheet.create({
-  wrap: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.xl, gap: spacing.lg },
-  iconWrap: {
-    width: 88,
-    height: 88,
-    borderRadius: 999,
-    backgroundColor: colors.card,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: colors.borderStrong,
-  },
-  title: { color: colors.text, fontSize: font.sizes.xxl, fontWeight: '800' },
-  desc: { color: colors.textMuted, fontSize: font.sizes.md, textAlign: 'center', lineHeight: 22 },
-});
