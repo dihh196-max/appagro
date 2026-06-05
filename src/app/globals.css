@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+/**
+ * Tema AgroNet — fundo azul-marinho profundo + verde-menta neon de destaque.
+ * Cores e tokens registrados no Tailwind v4 via @theme inline.
+ */
+@theme inline {
+  --color-bg: #0a1a2f;
+  --color-bg-top: #0c2440;
+  --color-bg-bottom: #081627;
+  --color-card: #0f2238;
+  --color-card-elev: #13294a;
+  --color-surface: #16304f;
+
+  --color-brand: #2ee38a;
+  --color-brand-dark: #1fb870;
+
+  --color-fg: #ffffff;
+  --color-fg-muted: #9fb2c8;
+  --color-fg-faint: #5f77a0;
+
+  --color-up: #2ee38a;
+  --color-down: #ff6b6b;
+  --color-warning: #ffc857;
+
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-strong: rgba(46, 227, 138, 0.35);
+
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Inter", "Helvetica Neue", Arial, sans-serif;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Esconde a scrollbar nas listas horizontais (mobile carousel feel) */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Glow sutil em volta dos campos focados */
+.focus-ring:focus-within {
+  box-shadow: 0 0 0 2px rgba(46, 227, 138, 0.25);
+}
