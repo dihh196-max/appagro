@@ -1,0 +1,19 @@
+{
+  "name": "AgroNet",
+  "short_name": "AgroNet",
+  "description": "Tudo do agro, em um só lugar.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0A1A2F",
+  "theme_color": "#0A1A2F",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

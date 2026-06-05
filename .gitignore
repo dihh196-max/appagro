@@ -1,44 +1,44 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+# See https://nextjs.org/docs/app/building-your-application/deploying
 
 # dependencies
-node_modules/
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
 
-# Expo
-.expo/
-dist/
-web-build/
-expo-env.d.ts
+# testing
+/coverage
 
-# screenshots (artefatos locais)
-shots/
+# next.js
+/.next/
+/out/
 
-# Native
-.kotlin/
-*.orig.*
-*.jks
-*.p8
-*.p12
-*.key
-*.mobileprovision
+# production
+/build
 
-# Metro
-.metro-health-check*
-
-# debug
-npm-debug.*
-yarn-debug.*
-yarn-error.*
-
-# macOS
+# misc
 .DS_Store
 *.pem
 
-# local env files
-.env*.local
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files
+.env*
+!.env.local.example
+
+# vercel
+.vercel
 
 # typescript
 *.tsbuildinfo
+next-env.d.ts
 
-# generated native folders
-/ios
-/android
+# screenshots (artefatos locais)
+/shots
+
+# misc local
+.gitignore.tmp

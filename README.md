@@ -1,49 +1,65 @@
 # AgroNet 🌱
 
-Super app do agronegócio — **"Tudo do agro, em um só lugar"**.
-Aplicativo multiplataforma (iOS, Android e Web) construído com **Expo + expo-router + TypeScript**.
+Super app do agronegócio — **SaaS web responsivo (PWA)** com foco mobile-first.
+Construído com **Next.js 16 (App Router) + Tailwind v4 + TypeScript + Supabase**.
 
-## Telas já implementadas
+## Stack
 
-- **Onboarding** — carrossel com o ecossistema de ícones dos módulos.
-- **Login / Cadastro** — autenticação (UI; integração de backend pendente).
-- **Home** — saudação, cotações de grãos, clima, alerta climático, grade de
-  19 módulos, comunidade e feed de conteúdo.
-- **Abas** — Início, Clima, Cálculos, AgroIA e Mais.
-
-## Módulos previstos
-
-Clima · Calculadoras · Solos · Fertilidade · Biblioteca · Notícias · Cursos ·
-Empregos · Defensivos · Laudos · Dashboard · AgroIA · Finanças · Relatórios ·
-Diário · Inventário · Calendário · Pragas IA · Irrigação.
+- **Next.js 16** — React Server Components + App Router
+- **Tailwind v4** — design system AgroNet (tema escuro + verde-menta)
+- **Supabase** — autenticação, banco Postgres e storage *(plugue em `.env.local`)*
+- **lucide-react** — ícones
+- **PWA** — instalável no celular (manifest + ícones)
 
 ## Rodando o projeto
 
 ```bash
-npm install        # instala as dependências (gera o package-lock.json)
-npm run web        # abre no navegador
-npm run android    # abre no Android (emulador/dispositivo)
-npm run ios        # abre no iOS (requer macOS)
+npm install
+npm run dev          # desenvolvimento (http://localhost:3000)
+npm run build        # build de produção
+npm run start        # servir build
 ```
+
+Para habilitar o Supabase, copie `.env.local.example` para `.env.local` e
+preencha com as chaves do seu projeto.
+
+## Rotas
+
+| Rota | Descrição |
+|------|-----------|
+| `/onboarding` | Apresentação do app |
+| `/login` | Acesso (campos glass sobre foto do agro) |
+| `/register` | Cadastro |
+| `/home` | Feed social de notícias |
+| `/buscar` `/criar` `/agroia` `/perfil` | Abas do app |
 
 ## Estrutura
 
 ```
-app/                 # rotas (expo-router)
-  _layout.tsx        # navegação raiz
-  index.tsx          # entrada → onboarding
-  onboarding.tsx
-  (auth)/            # login e cadastro
-  (tabs)/            # abas principais (Home, Clima, Cálculos, AgroIA, Mais)
 src/
-  components/        # componentes reutilizáveis (Screen, Card, Field, ...)
-  data/              # dados (módulos, cotações)
-  theme/             # tema (cores, espaçamentos, tipografia)
+├─ app/                       # rotas Next.js
+│  ├─ layout.tsx              # html/body raiz, fontes, PWA
+│  ├─ page.tsx                # → /onboarding
+│  ├─ onboarding/
+│  ├─ login/
+│  ├─ register/
+│  └─ (app)/                  # grupo de rotas autenticadas
+│     ├─ layout.tsx           # AppShell (drawer + tabs)
+│     ├─ home/
+│     ├─ buscar/
+│     ├─ criar/
+│     ├─ agroia/
+│     └─ perfil/
+├─ components/                # Shell, AppShell, BottomTabs, ToolsDrawer,
+│                             # CircleIconButton, NewsImage, Placeholder
+├─ data/                      # modules.ts, news.ts (mocks por enquanto)
+└─ lib/supabase/              # cliente Supabase
 ```
 
-## Observações
+## Próximos passos
 
-- Os **ícones do app** (`assets/*.png`) usam os placeholders padrão do Expo e
-  ainda serão substituídos pela identidade visual definitiva do AgroNet.
-- Dados de cotações, clima e feed estão **mockados** — a integração com APIs e
-  backend (autenticação, banco, assinaturas) é o próximo passo.
+- [ ] Plugar `signInWithPassword` / `signUp` reais no Supabase
+- [ ] Salvar likes/saves/follows no banco (com RLS por usuário)
+- [ ] Layout dedicado pra desktop em telões (sidebar + multi-coluna)
+- [ ] Deploy no Vercel com domínio próprio
+- [ ] Stripe / Mercado Pago para assinaturas
