@@ -19,8 +19,27 @@ function isPublicPath(pathname: string) {
   );
 }
 
+function isSupabaseConfigured() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
+  return (
+    url.startsWith("https://") &&
+    !url.includes("placeholder") &&
+    key.length > 0 &&
+    !key.includes("placeholder")
+  );
+}
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
+
+  // Se o Supabase ainda não foi configurado (dev local sem .env.local real),
+  // o proxy deixa passar — assim a landing renderiza sem 500.
+  // Rotas privadas vão exibir tela de erro do Supabase quando acessadas, mas
+  // o app inteiro não fica inacessível.
+  if (!isSupabaseConfigured()) {
+    return supabaseResponse;
+  }
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
